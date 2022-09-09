@@ -31,7 +31,7 @@ boris.banushev@databricks.com
 ___
 
 
-IMAGE TO REFERENCE ARCHITECTURE
+<img src='capm_arch.png' />
 
 ___
 
