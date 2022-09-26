@@ -1,0 +1,426 @@
+{
+  "queries": [
+    {
+      "id": "9070c518-b290-40de-8d20-f9edb7b99463",
+      "name": "beta",
+      "description": null,
+      "query": "SELECT * from hive_metastore.capm_dlt_output.capm_betas_and_returns \nwhere LOWER(Company) LIKE LOWER('%'{{ name }}'%')",
+      "options": {
+        "apply_auto_limit": true,
+        "visualization_control_order": [
+          "name"
+        ],
+        "parameters": [
+          {
+            "title": "name",
+            "name": "name",
+            "type": "text",
+            "global": false,
+            "parentQueryId": "9070c518-b290-40de-8d20-f9edb7b99463",
+            "locals": [],
+            "urlPrefix": "p_",
+            "value": "AAPL",
+            "$$value": "AAPL"
+          }
+        ]
+      },
+      "visualizations": [
+        {
+          "id": "38285f42-d327-4ebd-9891-d608f79e8365",
+          "type": "TABLE",
+          "name": "Table",
+          "description": "",
+          "options": {
+            "version": 2
+          }
+        },
+        {
+          "id": "5338b8cc-151b-4420-843b-2a6bddc20bc1",
+          "type": "COUNTER",
+          "name": "BetaItself",
+          "description": "",
+          "options": {
+            "counterLabel": "Beta",
+            "counterColName": "Beta",
+            "rowNumber": 1,
+            "targetRowNumber": 1,
+            "stringDecimal": 0,
+            "stringDecChar": ".",
+            "stringThouSep": ",",
+            "tooltipFormat": "0,0.000",
+            "targetColName": "Beta"
+          }
+        },
+        {
+          "id": "7470a2cb-0c72-46d7-8014-e0047818af9b",
+          "type": "DETAILS",
+          "name": "Company Info",
+          "description": "",
+          "options": {
+            "columns": [
+              {
+                "name": "Company",
+                "type": "string",
+                "title": "Company"
+              },
+              {
+                "name": "Beta",
+                "type": "float",
+                "title": "Beta"
+              },
+              {
+                "name": "Return",
+                "type": "float",
+                "title": "Return"
+              }
+            ],
+            "version": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "59be4784-a5b7-4c6c-8ee3-945fff959d89",
+      "name": "Returns",
+      "description": null,
+      "query": "select * from hive_metastore.capm_dlt_output.capm_gold\n",
+      "options": {
+        "apply_auto_limit": true,
+        "visualization_control_order": [],
+        "parameters": []
+      },
+      "visualizations": [
+        {
+          "id": "e989b142-bdae-4add-9e23-91ad74612dfe",
+          "type": "TABLE",
+          "name": "Table",
+          "description": "",
+          "options": {
+            "version": 2
+          }
+        },
+        {
+          "id": "fc11adf3-ccea-4ca3-8fc8-ead579b13f9a",
+          "type": "CHART",
+          "name": "Correlation with SP500",
+          "description": "",
+          "options": {
+            "version": 2,
+            "globalSeriesType": "bubble",
+            "sortX": true,
+            "sortY": true,
+            "legend": {
+              "traceorder": "normal"
+            },
+            "xAxis": {
+              "type": "-",
+              "labels": {
+                "enabled": true
+              }
+            },
+            "yAxis": [
+              {
+                "type": "-"
+              },
+              {
+                "type": "-",
+                "opposite": true
+              }
+            ],
+            "alignYAxesAtZero": false,
+            "error_y": {
+              "type": "data",
+              "visible": true
+            },
+            "series": {
+              "stacking": null,
+              "error_y": {
+                "type": "data",
+                "visible": true
+              }
+            },
+            "seriesOptions": {
+              "AMZN": {
+                "yAxis": 0,
+                "type": "bubble"
+              }
+            },
+            "valuesOptions": {},
+            "direction": {
+              "type": "counterclockwise"
+            },
+            "sizemode": "diameter",
+            "coefficient": 2,
+            "numberFormat": "0,0[.]00000",
+            "percentFormat": "0[.]00%",
+            "textFormat": "",
+            "missingValuesAsZero": true,
+            "useAggregationsUi": true,
+            "swappedAxes": false,
+            "dateTimeFormat": "YYYY-MM-DD HH:mm",
+            "showDataLabels": false,
+            "columnConfigurationMap": {
+              "x": {
+                "column": "SP500",
+                "id": "column_ed3022787695"
+              },
+              "y": [
+                {
+                  "column": "AMZN",
+                  "id": "column_ed3022787696"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "e000d851-f2b6-4e52-a4ad-5a612134ffe6",
+      "name": "stockChart",
+      "description": null,
+      "query": "SELECT Date, Close FROM hive_metastore.stock_market_historical_data.us_master where LOWER(Company) LIKE LOWER('%'{{ name }}'%') and Date > '2019-01-01'",
+      "options": {
+        "apply_auto_limit": false,
+        "visualization_control_order": [
+          "name"
+        ],
+        "parameters": [
+          {
+            "title": "name",
+            "name": "name",
+            "type": "text",
+            "global": false,
+            "parentQueryId": "e000d851-f2b6-4e52-a4ad-5a612134ffe6",
+            "locals": [],
+            "urlPrefix": "p_",
+            "value": "AAPL",
+            "$$value": "AAPL"
+          }
+        ]
+      },
+      "visualizations": [
+        {
+          "id": "5776600f-336a-4d07-bb00-4a3bd97e231d",
+          "type": "TABLE",
+          "name": "Table",
+          "description": "",
+          "options": {
+            "version": 2
+          }
+        },
+        {
+          "id": "bb006df3-69b4-4f16-8d18-c0a874b83c19",
+          "type": "CHART",
+          "name": "Chart",
+          "description": "",
+          "options": {
+            "version": 2,
+            "globalSeriesType": "line",
+            "sortX": true,
+            "sortY": true,
+            "legend": {
+              "traceorder": "normal"
+            },
+            "xAxis": {
+              "type": "-",
+              "labels": {
+                "enabled": true
+              }
+            },
+            "yAxis": [
+              {
+                "type": "-"
+              },
+              {
+                "type": "-",
+                "opposite": true
+              }
+            ],
+            "alignYAxesAtZero": false,
+            "error_y": {
+              "type": "data",
+              "visible": true
+            },
+            "series": {
+              "stacking": null,
+              "error_y": {
+                "type": "data",
+                "visible": true
+              }
+            },
+            "seriesOptions": {
+              "column_6f48078322123": {
+                "name": "Close",
+                "yAxis": 0
+              }
+            },
+            "valuesOptions": {},
+            "direction": {
+              "type": "counterclockwise"
+            },
+            "sizemode": "diameter",
+            "coefficient": 1,
+            "numberFormat": "0,0[.]00000",
+            "percentFormat": "0[.]00%",
+            "textFormat": "",
+            "missingValuesAsZero": true,
+            "useAggregationsUi": true,
+            "swappedAxes": false,
+            "dateTimeFormat": "YYYY-MM-DD HH:mm",
+            "showDataLabels": false,
+            "columnConfigurationMap": {
+              "x": {
+                "column": "Date",
+                "id": "column_6f48078322122"
+              },
+              "y": [
+                {
+                  "column": "Close",
+                  "transform": "SUM",
+                  "id": "column_6f48078322123"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "dashboard": {
+    "id": "3d02b701-220c-43c2-8126-52a8ea56f204",
+    "name": "CAPM",
+    "widgets": [
+      {
+        "id": "8c813729-82b3-42e0-9a02-6766e16c6c67",
+        "width": 1,
+        "options": {
+          "parameterMappings": {
+            "name": {
+              "name": "name",
+              "type": "dashboard-level",
+              "mapTo": "name",
+              "value": null,
+              "title": ""
+            }
+          },
+          "title": "",
+          "description": "",
+          "isHidden": false,
+          "position": {
+            "autoHeight": false,
+            "sizeX": 4,
+            "sizeY": 16,
+            "minSizeX": 1,
+            "maxSizeX": 6,
+            "minSizeY": 5,
+            "maxSizeY": 1000,
+            "col": 0,
+            "row": 0
+          }
+        },
+        "dashboard_id": "3d02b701-220c-43c2-8126-52a8ea56f204",
+        "text": "",
+        "visualization_id": "bb006df3-69b4-4f16-8d18-c0a874b83c19"
+      },
+      {
+        "id": "3331e814-7f96-4241-9d1d-b1ac22ea5b10",
+        "width": 1,
+        "options": {
+          "parameterMappings": {
+            "name": {
+              "name": "name",
+              "type": "dashboard-level",
+              "mapTo": "name",
+              "value": null,
+              "title": ""
+            }
+          },
+          "title": "Details view 1 - beta",
+          "description": "",
+          "isHidden": false,
+          "position": {
+            "autoHeight": false,
+            "sizeX": 2,
+            "sizeY": 4,
+            "minSizeX": 1,
+            "maxSizeX": 6,
+            "minSizeY": 1,
+            "maxSizeY": 1000,
+            "col": 4,
+            "row": 0
+          }
+        },
+        "dashboard_id": "3d02b701-220c-43c2-8126-52a8ea56f204",
+        "text": "",
+        "visualization_id": "7470a2cb-0c72-46d7-8014-e0047818af9b"
+      },
+      {
+        "id": "48761336-0c66-4881-8d9b-c6718a673989",
+        "width": 1,
+        "options": {
+          "parameterMappings": {
+            "name": {
+              "name": "name",
+              "type": "dashboard-level",
+              "mapTo": "name",
+              "value": null,
+              "title": ""
+            }
+          },
+          "title": "Beta",
+          "description": "",
+          "isHidden": false,
+          "position": {
+            "autoHeight": false,
+            "sizeX": 2,
+            "sizeY": 5,
+            "minSizeX": 1,
+            "maxSizeX": 6,
+            "minSizeY": 1,
+            "maxSizeY": 1000,
+            "col": 4,
+            "row": 4
+          }
+        },
+        "dashboard_id": "3d02b701-220c-43c2-8126-52a8ea56f204",
+        "text": "",
+        "visualization_id": "5338b8cc-151b-4420-843b-2a6bddc20bc1"
+      },
+      {
+        "id": "c5d16ba4-2989-4874-9ae4-66d6113d7a65",
+        "width": 1,
+        "options": {
+          "parameterMappings": {},
+          "title": "Correlation with S&P 500",
+          "description": "",
+          "isHidden": false,
+          "position": {
+            "autoHeight": false,
+            "sizeX": 2,
+            "sizeY": 7,
+            "minSizeX": 1,
+            "maxSizeX": 6,
+            "minSizeY": 5,
+            "maxSizeY": 1000,
+            "col": 4,
+            "row": 9
+          }
+        },
+        "dashboard_id": "3d02b701-220c-43c2-8126-52a8ea56f204",
+        "text": "",
+        "visualization_id": "fc11adf3-ccea-4ca3-8fc8-ead579b13f9a"
+      }
+    ],
+    "tags": [
+      "field_demos_fsi",
+      "Owner: @boris.banushev",
+      "gtm: #financialservices-global-everyone",
+      "[Typical] Freshness: Unknown"
+    ],
+    "color_palette": null,
+    "dashboard_filters_enabled": false,
+    "is_archived": false
+  },
+  "version": "1.0"
+}

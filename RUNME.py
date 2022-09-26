@@ -33,100 +33,71 @@ from solacc.companion import NotebookSolutionCompanion
 # COMMAND ----------
 
 job_json = {
-        "timeout_seconds": 7200,
+        "timeout_seconds": 36000,
         "max_concurrent_runs": 1,
         "tags": {
-            "usage": "solacc_automation",
+            "usage": "solacc_testing",
             "group": "FSI"
         },
         "tasks": [
             {
-                "job_cluster_key": "capm_cluster",
+                "job_cluster_key": "CAPM_cluster",
+                "notebook_task": {
+                    "notebook_path": f"01_introduction"
+                },
+                "task_key": "CAPM_01"
+            },
+            {
+                "job_cluster_key": "CAPM_cluster",
                 "libraries": [],
                 "notebook_task": {
-                    "notebook_path": f"00_Overview & Configuration",
-                    "base_parameters": {
-                        "holdout days": "90"
-                    }
+                    "notebook_path": f"02_beta_and_return"
                 },
-                "task_key": "capm_01",
-                "description": ""
-            },
-            {
-                "job_cluster_key": "capm_cluster",
-                "notebook_task": {
-                    "notebook_path": f"01_Data Preparation",
-                    "base_parameters": {
-                        "holdout days": "90"
-                    }
-                },
-                "task_key": "capm_02",
+                "task_key": "CAPM_02",
                 "depends_on": [
                     {
-                        "task_key": "capm_01"
+                        "task_key": "CAPM_01"
                     }
                 ]
             },
             {
-                "job_cluster_key": "capm_cluster",
+                "job_cluster_key": "CAPM_cluster",
                 "notebook_task": {
-                    "notebook_path": f"02_Feature Engineering",
-                    "base_parameters": {
-                        "holdout days": "90"
-                    }
+                    "notebook_path": f"03_productionalizing"
                 },
-                "task_key": "capm_03",
+                "task_key": "CAPM_03",
                 "depends_on": [
                     {
-                        "task_key": "capm_02"
+                        "task_key": "CAPM_02"
                     }
                 ]
             },
             {
-                "job_cluster_key": "capm_cluster",
+                "job_cluster_key": "CAPM_cluster",
                 "notebook_task": {
-                    "notebook_path": f"03_Model Training",
-                    "base_parameters": {
-                        "holdout days": "90"
-                    }
+                    "notebook_path": f"04_dashboarding"
                 },
-                "task_key": "capm_04",
+                "task_key": "CAPM_04",
                 "depends_on": [
                     {
-                        "task_key": "capm_03"
-                    }
-                ]
-            },
-            {
-                "job_cluster_key": "capm_cluster",
-                "notebook_task": {
-                    "notebook_path": f"04_Scoring",
-                    "base_parameters": {
-                        "holdout days": "90"
-                    }
-                },
-                "task_key": "capm_05",
-                "depends_on": [
-                    {
-                        "task_key": "capm_04"
+                        "task_key": "CAPM_03"
                     }
                 ]
             }
         ],
         "job_clusters": [
             {
-                "job_cluster_key": "capm_cluster",
+                "job_cluster_key": "CAPM_cluster",
                 "new_cluster": {
-                    "spark_version": "10.5.x-cpu-ml-scala2.12",
-                "spark_conf": {
-                    "spark.databricks.delta.formatCheck.enabled": "false"
+                    "spark_version": "10.4.x-cpu-ml-scala2.12",
+                    "spark_conf": {
+                      "spark.databricks.delta.formatCheck.enabled": "false"
                     },
                     "num_workers": 4,
-                    "node_type_id": {"AWS": "i3.xlarge", "MSA": "Standard_D3_v2", "GCP": "n1-highmem-4"},
+                    "node_type_id": {"AWS": "i3.xlarge", "MSA": "Standard_D3_v2", "GCP": "n1-highmem-4"}, # different from standard API,
                     "custom_tags": {
-            "usage": "solacc_automation",
-            "group": "FSI_solacc_automation"
-        },
+                        "usage": "solacc_testing"
+                    }
                 }
             }
         ]
@@ -136,7 +107,13 @@ job_json = {
 
 dbutils.widgets.dropdown("run_job", "False", ["True", "False"])
 run_job = dbutils.widgets.get("run_job") == "True"
-NotebookSolutionCompanion().deploy_compute(job_json, run_job=run_job)
+nsc = NotebookSolutionCompanion()
+nsc.deploy_compute(job_json, run_job=run_job)
+nsc.deploy_dbsql("./CAPM.dbdash")
+
+# COMMAND ----------
+
+
 
 # COMMAND ----------
 
