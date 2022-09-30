@@ -24,7 +24,7 @@
 # COMMAND ----------
 
 # DBTITLE 0,Install util packages
-# MAGIC %pip install git+https://github.com/databricks-academy/dbacademy-rest git+https://github.com/databricks-academy/dbacademy-gems git+https://github.com/databricks-industry-solutions/notebook-solution-companion
+# MAGIC %pip install git+https://github.com/databricks-industry-solutions/notebook-solution-companion git+https://github.com/databricks-academy/dbacademy-rest git+https://github.com/databricks-academy/dbacademy-gems 
 
 # COMMAND ----------
 
@@ -32,7 +32,48 @@ from solacc.companion import NotebookSolutionCompanion
 
 # COMMAND ----------
 
-job_json = {
+spark.sql(f"CREATE DATABASE IF NOT EXISTS databricks_solacc LOCATION '/databricks_solacc/'")
+spark.sql(f"CREATE TABLE IF NOT EXISTS databricks_solacc.dlt (path STRING, pipeline_id STRING, solacc STRING)")
+dlt_config_table = "databricks_solacc.dlt"
+
+# COMMAND ----------
+
+pipeline_json = {
+    "clusters": [
+        {
+            "label": "default",
+            "autoscale": {
+                "min_workers": 1,
+                "max_workers": 5,
+                "mode": "LEGACY"
+            }
+        }
+    ],
+    "development": True,
+    "continuous": False,
+    "channel": "CURRENT",
+    "edition": "ADVANCED",
+    "photon": True,
+    "libraries": [
+        {
+            "notebook": {
+                "path": "02_beta_and_return"
+            }
+        }
+    ],
+          "name": "SOLACC_CAPM",
+          "storage": f"/databricks_solacc/capm/dlt",
+          "target": f"capm_dlt_output",
+          "allow_duplicate_names": "true"
+}
+
+# COMMAND ----------
+
+pipeline_id = NotebookSolutionCompanion().deploy_pipeline(pipeline_json, dlt_config_table, spark)
+
+# COMMAND ----------
+
+job_json = job_json = {
         "timeout_seconds": 36000,
         "max_concurrent_runs": 1,
         "tags": {
@@ -48,10 +89,8 @@ job_json = {
                 "task_key": "CAPM_01"
             },
             {
-                "job_cluster_key": "CAPM_cluster",
-                "libraries": [],
-                "notebook_task": {
-                    "notebook_path": f"02_beta_and_return"
+                "pipeline_task": {
+                    "pipeline_id": pipeline_id
                 },
                 "task_key": "CAPM_02",
                 "depends_on": [
@@ -103,17 +142,15 @@ job_json = {
         ]
     }
 
+
 # COMMAND ----------
 
+# DBTITLE 1,Deploy companion
 dbutils.widgets.dropdown("run_job", "False", ["True", "False"])
 run_job = dbutils.widgets.get("run_job") == "True"
 nsc = NotebookSolutionCompanion()
 nsc.deploy_compute(job_json, run_job=run_job)
 nsc.deploy_dbsql("./CAPM.dbdash")
-
-# COMMAND ----------
-
-
 
 # COMMAND ----------
 
