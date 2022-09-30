@@ -71,17 +71,26 @@
 
 # COMMAND ----------
 
-# spark.range(10).write.save("s3a://db-gtm-industry-solutions/data/fsi/capm/us_closing_prices/")
-
-# COMMAND ----------
-
-# spark.table("stock_market_historical_data.us_closing_prices").write.save("s3a://db-gtm-industry-solutions/data/fsi/capm/us_closing_prices/")
+# DBTITLE 1,Create tables to read source data
+# MAGIC %sql
+# MAGIC CREATE DATABASE IF NOT EXISTS hive_metastore.stock_market_historical_data;
+# MAGIC 
+# MAGIC CREATE DATABASE IF NOT EXISTS hive_metastore.indices_historical_data;
+# MAGIC 
+# MAGIC DROP TABLE IF EXISTS hive_metastore.stock_market_historical_data.us_closing_prices;
+# MAGIC 
+# MAGIC CREATE TABLE hive_metastore.stock_market_historical_data.us_closing_prices
+# MAGIC LOCATION 's3a://db-gtm-industry-solutions/data/fsi/capm/us_closing_prices/';
+# MAGIC 
+# MAGIC DROP TABLE IF EXISTS hive_metastore.indices_historical_data.sp_500;
+# MAGIC 
+# MAGIC CREATE TABLE hive_metastore.indices_historical_data.sp_500
+# MAGIC LOCATION 's3a://db-gtm-industry-solutions/data/fsi/capm/sp_500/';
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC 
-# MAGIC SELECT * FROM stock_market_historical_data.us_closing_prices
+# MAGIC SELECT * FROM hive_metastore.stock_market_historical_data.us_closing_prices
 
 # COMMAND ----------
 
