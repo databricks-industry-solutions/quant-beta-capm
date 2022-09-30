@@ -71,6 +71,14 @@
 
 # COMMAND ----------
 
+# spark.range(10).write.save("s3a://db-gtm-industry-solutions/data/fsi/capm/us_closing_prices/")
+
+# COMMAND ----------
+
+# spark.table("stock_market_historical_data.us_closing_prices").write.save("s3a://db-gtm-industry-solutions/data/fsi/capm/us_closing_prices/")
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC 
 # MAGIC SELECT * FROM stock_market_historical_data.us_closing_prices
