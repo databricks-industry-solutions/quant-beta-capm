@@ -104,9 +104,8 @@ def betas_and_capmreturn():
   r_m = 0.2689
   
   returns_ks = dlt.read('capm_gold').to_koalas()
-  returns_pd = returns_ks.to_pandas()
-  covs_pd = returns_pd.cov() * 250
-  cov_ks = ks.DataFrame(covs_pd)
+
+  cov_ks = returns_ks.cov() * 250
   
   companies_dct = []
   betas_schema = StructType([ \
@@ -116,7 +115,7 @@ def betas_and_capmreturn():
   ])
   
   # Annualized variance of SP 500 
-  market_var = returns_pd['SP500'].var() * 250
+  market_var = returns_ks['SP500'].var() * 250
   
   for t in cov_ks.columns[1:]:
     
@@ -128,19 +127,12 @@ def betas_and_capmreturn():
     
     # CAPM formula
     capm = r_f + beta * (r_m - r_f)
-    
     companies_dct.append({'Company': t, 'Beta': float(beta), 'Return' : float(capm)})
-    
   return spark.createDataFrame(data = companies_dct, schema = betas_schema)
 
 # COMMAND ----------
 
 
-
-# COMMAND ----------
-
-"""capm_bronze_df = spark.sql("SELECT * FROM (SELECT to_date(Date, 'yyyy-MM-dd') as DateSP500, Close as SP500 FROM hive_metastore.indices_historical_data.sp_500) as idxs INNER JOIN (SELECT * FROM hive_metastore.stock_market_historical_data.us_closing_prices) as equities ON idxs.DateSP500 = equities.Date;").drop('DateSP500').drop('Date')
-capm_bronze_df.select(capm_bronze_df.columns[:20])"""
 
 # COMMAND ----------
 
