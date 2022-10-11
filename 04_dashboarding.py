@@ -10,7 +10,7 @@ spark.sql('select * from hive_metastore.capm_dlt_output.capm_gold').to_koalas().
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from hive_metastore.capm_dlt_output.capm_gold version as of 3
+# MAGIC select * from hive_metastore.capm_dlt_output.capm_gold version as of 2
 
 # COMMAND ----------
 
