@@ -100,9 +100,8 @@ job_json = job_json = {
                 ]
             },
             {
-                "job_cluster_key": "CAPM_cluster",
-                "notebook_task": {
-                    "notebook_path": f"03_productionalizing"
+                "pipeline_task": {
+                    "pipeline_id": pipeline_id # BBB: Need to execute the pipeline twice to guarantee results
                 },
                 "task_key": "CAPM_03",
                 "depends_on": [
@@ -114,12 +113,24 @@ job_json = job_json = {
             {
                 "job_cluster_key": "CAPM_cluster",
                 "notebook_task": {
-                    "notebook_path": f"04_dashboarding"
+                    "notebook_path": f"03_productionalizing"
                 },
                 "task_key": "CAPM_04",
                 "depends_on": [
                     {
                         "task_key": "CAPM_03"
+                    }
+                ]
+            },
+            {
+                "job_cluster_key": "CAPM_cluster",
+                "notebook_task": {
+                    "notebook_path": f"04_dashboarding"
+                },
+                "task_key": "CAPM_05",
+                "depends_on": [
+                    {
+                        "task_key": "CAPM_04"
                     }
                 ]
             }

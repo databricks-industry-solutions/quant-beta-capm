@@ -8,8 +8,7 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC 
-# MAGIC <img src='https://bbb-databricks-demo-assets.s3.amazonaws.com/DLT+DAG.png' style="float: center" width="1250px"  />
+# MAGIC <img src='https://github.com/databricks-industry-solutions/quant-beta-capm/raw/main/DLT_DAG.png' style="float: center" width="1250px"  />
 
 # COMMAND ----------
 
@@ -36,4 +35,8 @@
 
 # MAGIC %sql
 # MAGIC 
-# MAGIC SELECT * FROM hive_metastore.stock_market_historical_data.us_closing_prices TIMESTAMP AS OF "2022-07-31 09:57:10"
+# MAGIC SELECT * FROM hive_metastore.stock_market_historical_data.us_closing_100 VERSION AS OF 0
+
+# COMMAND ----------
+
+

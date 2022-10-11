@@ -67,7 +67,7 @@
 # MAGIC # Architecture
 # MAGIC 
 # MAGIC This is the architecture of the solution we will build.
-# MAGIC <img src='https://bbb-databricks-demo-assets.s3.amazonaws.com/capm_architecture.png' style="float: center" width="1400px"  />
+# MAGIC <img src='https://github.com/databricks-industry-solutions/quant-beta-capm/raw/main/capm_arch.png' style="float: center" width="1400px"  />
 
 # COMMAND ----------
 
@@ -77,10 +77,10 @@
 # MAGIC 
 # MAGIC CREATE DATABASE IF NOT EXISTS hive_metastore.indices_historical_data;
 # MAGIC 
-# MAGIC DROP TABLE IF EXISTS hive_metastore.stock_market_historical_data.us_closing_prices;
+# MAGIC DROP TABLE IF EXISTS hive_metastore.stock_market_historical_data.us_closing_100;
 # MAGIC 
-# MAGIC CREATE TABLE hive_metastore.stock_market_historical_data.us_closing_prices
-# MAGIC LOCATION 's3a://db-gtm-industry-solutions/data/fsi/capm/us_closing_prices/';
+# MAGIC CREATE TABLE hive_metastore.stock_market_historical_data.us_closing_100
+# MAGIC LOCATION 's3a://db-gtm-industry-solutions/data/fsi/capm/us_closing_100/';
 # MAGIC 
 # MAGIC DROP TABLE IF EXISTS hive_metastore.indices_historical_data.sp_500;
 # MAGIC 
@@ -90,11 +90,11 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC SELECT * FROM hive_metastore.stock_market_historical_data.us_closing_prices
+# MAGIC SELECT * FROM hive_metastore.stock_market_historical_data.us_closing_100
 
 # COMMAND ----------
 
-closing_prices_df = spark.sql('select * from hive_metastore.stock_market_historical_data.us_closing_prices')
+closing_prices_df = spark.sql('select * from hive_metastore.stock_market_historical_data.us_closing_100')
 
 # COMMAND ----------
 

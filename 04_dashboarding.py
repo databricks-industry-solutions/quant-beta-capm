@@ -5,4 +5,13 @@
 
 # COMMAND ----------
 
-spark.sql('select * from hive_metastore.capm_dlt_output.capm_betas_and_returns').to_koalas().plot.scatter(x='Beta', y='Return') 
+spark.sql('select * from hive_metastore.capm_dlt_output.capm_gold').to_koalas().plot.scatter(x='Beta', y='Return') 
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from hive_metastore.capm_dlt_output.capm_gold version as of 3
+
+# COMMAND ----------
+
+

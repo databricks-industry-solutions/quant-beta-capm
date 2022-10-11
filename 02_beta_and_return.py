@@ -14,9 +14,7 @@ from pyspark.sql.types import StructType,StructField, StringType, IntegerType, D
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 import pandas as pd
-
-
-import dlt 
+import dlt
 
 # COMMAND ----------
 
@@ -30,54 +28,28 @@ import dlt
 
 @dlt.table(name="capm_bronze")
 def capm_bronze():
-  capm_bronze_df = spark.sql("SELECT * FROM (SELECT to_date(Date, 'yyyy-MM-dd') as DateSP500, Close as SP500 FROM hive_metastore.indices_historical_data.sp_500) as idxs INNER JOIN (SELECT * FROM hive_metastore.stock_market_historical_data.us_closing_prices) as equities ON idxs.DateSP500 = equities.Date;").drop('DateSP500').drop('Date')
+  capm_bronze_df = spark.sql("SELECT * FROM (SELECT to_date(Date, 'yyyy-MM-dd') as DateSP500, Close as SP500 FROM hive_metastore.indices_historical_data.sp_500) as idxs INNER JOIN (SELECT * FROM hive_metastore.stock_market_historical_data.us_closing_100) as equities ON idxs.DateSP500 = equities.Date;").drop('DateSP500').drop('Date')
   return capm_bronze_df
 
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC 
-# MAGIC # Step 2: Silver layer - Cleaned data
-# MAGIC 
-# MAGIC Forward fill the missing values.
-
-# COMMAND ----------
-
-@dlt.table(name="capm_silver")
-def capm_silver():
-  
-  capm_silver_df = dlt.read('capm_bronze')
-  missing_values_pd = capm_silver_df.select([count(when(isnan(c) | col(c).isNull(), c)).alias(c) for c in capm_silver_df.columns]).toPandas()
-  
-  # forward fill missing value
-  forward_fill_window = (Window.rowsBetween(Window.unboundedPreceding, Window.currentRow))
-  for t in missing_values_pd.columns:
-    if missing_values_pd[t].iloc[0] > 0:
-      capm_silver_df = (
-          capm_silver_df
-          .withColumn(f'{t}', F.last(f'{t}', ignorenulls=True).over(forward_fill_window))
-      )
-  return capm_silver_df
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC 
-# MAGIC # Step 3: Gold layer - Returns data
+# MAGIC # Step 2: Silver layer - Returns data
 # MAGIC 
 # MAGIC Derive the daily returns of the stocks and index.
 
 # COMMAND ----------
 
 # This is how we constrain SP500 not to be null
-goldExpectations = {
+silverExpectations = {
     "sp500_not_null": "SP500 IS NOT NULL" 
 }
 
-@dlt.table(name="capm_gold")
-@dlt.expect_all(goldExpectations)
+@dlt.table(name="capm_silver")
+@dlt.expect_all(silverExpectations)
 def capm_gold():
-  returns_ks = dlt.read('capm_silver').to_koalas()
+  returns_ks = dlt.read('capm_bronze').to_koalas()
   
   # calculate the log of the daily return for each stock
   returns_ks = np.log(returns_ks / returns_ks.shift(1))
@@ -88,13 +60,13 @@ def capm_gold():
 
 # MAGIC %md
 # MAGIC 
-# MAGIC # Step 4: Gold layer - beta and CAPM data
+# MAGIC # Step 3: Gold layer - beta and CAPM data
 # MAGIC 
 # MAGIC Follow the formulas from the previous Notebook and calculate the beta and expected return.
 
 # COMMAND ----------
 
-@dlt.table(name="capm_betas_and_returns")
+@dlt.table(name="capm_gold")
 def betas_and_capmreturn():
   
   # 10 Year Treasury Rate as of August 4, 2022
@@ -103,7 +75,7 @@ def betas_and_capmreturn():
   # SP500 return for 2021, which we will use as a benchmark
   r_m = 0.2689
   
-  returns_ks = dlt.read('capm_gold').to_koalas()
+  returns_ks = dlt.read('capm_silver').to_koalas()
 
   cov_ks = returns_ks.cov() * 250
   
@@ -129,11 +101,3 @@ def betas_and_capmreturn():
     capm = r_f + beta * (r_m - r_f)
     companies_dct.append({'Company': t, 'Beta': float(beta), 'Return' : float(capm)})
   return spark.createDataFrame(data = companies_dct, schema = betas_schema)
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
-

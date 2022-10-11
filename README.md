@@ -31,7 +31,7 @@ boris.banushev@databricks.com
 ___
 
 
-<img src='capm_arch.png' />
+<img src='https://github.com/databricks-industry-solutions/quant-beta-capm/raw/main/capm_arch.png' />
 
 ___
 
