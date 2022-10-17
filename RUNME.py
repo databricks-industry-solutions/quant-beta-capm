@@ -144,7 +144,7 @@ job_json = job_json = {
                       "spark.databricks.delta.formatCheck.enabled": "false"
                     },
                     "num_workers": 4,
-                    "node_type_id": {"AWS": "i3.xlarge", "MSA": "Standard_D3_v2", "GCP": "n1-highmem-4"}, # different from standard API,
+                    "node_type_id": {"AWS": "i3.xlarge", "MSA": "Standard_DS3_v2", "GCP": "n1-highmem-4"}, # different from standard API,
                     "custom_tags": {
                         "usage": "solacc_testing"
                     }
