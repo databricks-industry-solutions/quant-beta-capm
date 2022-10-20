@@ -5,12 +5,8 @@
 
 # COMMAND ----------
 
-spark.sql('select * from hive_metastore.capm_dlt_output.capm_gold').to_koalas().plot.scatter(x='Beta', y='Return') 
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC select * from hive_metastore.capm_dlt_output.capm_gold version as of 2
+version_before_last = spark.sql("describe history hive_metastore.capm_dlt_output.capm_gold limit 2").select("version").collect()[1][0]
+spark.sql(f"select * from hive_metastore.capm_dlt_output.capm_gold version as of {version_before_last}").display()
 
 # COMMAND ----------
 
