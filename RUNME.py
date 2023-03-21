@@ -3,7 +3,7 @@
 # MAGIC 🎉
 # MAGIC 
 # MAGIC **Steps**
-# MAGIC 1. Simply attach this notebook to a cluster with DBR 11.0 and above, and hit Run-All for this notebook. A multi-step job and the clusters used in the job will be created for you and hyperlinks are printed on the last block of the notebook. 
+# MAGIC 1. Simply attach this notebook to a cluster and hit Run-All for this notebook. A multi-step job and the clusters used in the job will be created for you and hyperlinks are printed on the last block of the notebook. 
 # MAGIC 
 # MAGIC 2. Run the accelerator notebooks: Feel free to explore the multi-step job page and **run the Workflow**, or **run the notebooks interactively** with the cluster to see how this solution accelerator executes. 
 # MAGIC 
@@ -32,9 +32,13 @@ from solacc.companion import NotebookSolutionCompanion
 
 # COMMAND ----------
 
-spark.sql(f"CREATE DATABASE IF NOT EXISTS databricks_solacc LOCATION '/databricks_solacc/'")
-spark.sql(f"CREATE TABLE IF NOT EXISTS databricks_solacc.dlt (path STRING, pipeline_id STRING, solacc STRING)")
-dlt_config_table = "databricks_solacc.dlt"
+solacc_config_database = "databricks_solacc"
+dlt_config_table = f"{solacc_config_database}.dlt"
+dbsql_config_table = f"{solacc_config_database}.dbsql"
+
+spark.sql(f"CREATE DATABASE IF NOT EXISTS {solacc_config_database} LOCATION '/databricks_solacc/'")
+spark.sql(f"CREATE TABLE IF NOT EXISTS {dlt_config_table} (path STRING, pipeline_id STRING, solacc STRING)")
+spark.sql(f"CREATE TABLE IF NOT EXISTS {dbsql_config_table} (path STRING, id STRING, solacc STRING)")
 
 # COMMAND ----------
 
